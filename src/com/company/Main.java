@@ -93,7 +93,33 @@ public class Main {
                 }
             }
             else if (command == 4){
-
+                System.out.print("Enter Hospital ID: ");
+                long ID = sc.nextLong();
+                if (hospitalUniqueID.contains(ID)){
+                    System.out.print("Enter number of Slots to be added: ");
+                    long numberOfSlots = sc.nextLong();
+                    for (int i = 0; i < numberOfSlots ; i++) {
+                        System.out.print("Enter Day Number: ");
+                        long dayNumber = sc.nextLong();
+                        System.out.print("Enter Quantity: ");
+                        long quantity = sc.nextLong();
+                        System.out.println("Select Vaccine: ");
+                        for (int j = 0; j < vaccineList.size() ; j++) {
+                            System.out.println(j + "." + vaccineList.get(j).getName());
+                        }
+                        int vaxNum = sc.nextInt();
+                        if (vaxNum< vaccineList.size()) {
+                            slot s = new slot(dayNumber, vaccineList.get(vaxNum), quantity, ID);
+                            for (hospital j: hospitalList) {
+                                if (j.getUniqueID()==ID){
+                                    j.slots.add(s);
+                                    s.display();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
             else if (command == 5){
 
@@ -147,6 +173,7 @@ class hospital{
     private final String name;
     private final long pincode;
     private final long uniqueID;
+    ArrayList<slot> slots = new ArrayList<>();
     public hospital(String name, long pincode, long uniqueID){
         this.name = name;
         this.pincode = pincode;
@@ -190,5 +217,35 @@ class citizen{
         System.out.print("Citizen Name: " + getName() + ", ");
         System.out.print("Age: " + getAge() + ", ");
         System.out.println("Unique ID: " + getUniqueID() + ", ");
+    }
+    public vaccine storeVax(vaccine vax){
+        return vax;
+    }
+}
+
+class slot{
+    long dayNumber;
+    vaccine vax;
+    long quantity;
+    long hospitalID;
+    public slot(long dayNumber, vaccine vax, long quantity, long hospitalID){
+        this.dayNumber = dayNumber;
+        this.vax = vax;
+        this.quantity = quantity;
+        this.hospitalID = hospitalID;
+    }
+    public long getDayNumber() {
+        return dayNumber;
+    }
+    public vaccine getVax(){
+        return vax;
+    }
+    public long getQuantity() {
+        return quantity;
+    }
+    public void display(){
+        System.out.print("Slot added by Hospital: " + hospitalID + " for Day: " + dayNumber + ", ");
+        System.out.print("Available Quantity: " + quantity + ", of ");
+        System.out.println("Vaccine " + vax.getName() + ", ");
     }
 }
