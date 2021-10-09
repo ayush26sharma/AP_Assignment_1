@@ -119,9 +119,9 @@ public class Main {
 }
 
 class vaccine{
-    private String name;
-    private long doses;
-    private long doseGap;
+    private final String name;
+    private final long doses;
+    private final long doseGap;
     public vaccine(String name, long doses, long doseGap){
         this.name = name;
         this.doses = doses;
@@ -144,9 +144,9 @@ class vaccine{
 }
 
 class hospital{
-    private String name;
-    private long pincode;
-    private long uniqueID;
+    private final String name;
+    private final long pincode;
+    private final long uniqueID;
     public hospital(String name, long pincode, long uniqueID){
         this.name = name;
         this.pincode = pincode;
@@ -169,9 +169,9 @@ class hospital{
 }
 
 class citizen{
-    private String name;
-    private long age;
-    private long uniqueID;
+    private final String name;
+    private final long age;
+    private final long uniqueID;
     public citizen(String name, long age, long uniqueID){
         this.name = name;
         this.age = age;
