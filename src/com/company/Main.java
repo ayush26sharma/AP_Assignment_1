@@ -5,6 +5,8 @@ public class Main {
     static ArrayList<vaccine> vaccineList = new ArrayList<>();
     static ArrayList<hospital> hospitalList = new ArrayList<>();
     static ArrayList<Long> hospitalUniqueID = new ArrayList<>();
+    static ArrayList<Long> citizenUniqueID = new ArrayList<>();
+    static ArrayList<citizen> citizensList = new ArrayList<>();
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
         Random rand = new Random();
@@ -62,7 +64,33 @@ public class Main {
                 }
             }
             else if (command == 3){
-
+                System.out.print("Citizen Name: ");
+                String name = sc.next();
+                System.out.print("Age: ");
+                long age = sc.nextLong();
+                System.out.print("Unique ID: ");
+                long uniqueID = sc.nextLong();
+                if (age<=18){
+                    citizen person = new citizen(name, age, uniqueID);
+                    person.display();
+                    System.out.println("Only above 18 are allowed");
+                }
+                else{
+                    if (citizenUniqueID.contains(uniqueID)){
+                        System.out.println("Citizen with Unique ID " + uniqueID + " already exists.");
+                    }
+                    else {
+                        if (uniqueID/ 100000000000L < 1) {
+                            System.out.println("Invalid Unique ID");
+                        }
+                        else {
+                            citizen person = new citizen(name, age, uniqueID);
+                            citizensList.add(person);
+                            person.display();
+                            System.out.println("Registered");
+                        }
+                    }
+                }
             }
             else if (command == 4){
 
@@ -136,6 +164,31 @@ class hospital{
     public void display(){
         System.out.print("Hospital Name: " + getName() + ", ");
         System.out.print("Pincode: " + getPincode() + ", ");
+        System.out.println("Unique ID: " + getUniqueID() + ", ");
+    }
+}
+
+class citizen{
+    private String name;
+    private long age;
+    private long uniqueID;
+    public citizen(String name, long age, long uniqueID){
+        this.name = name;
+        this.age = age;
+        this.uniqueID = uniqueID;
+    }
+    public String getName() {
+        return name;
+    }
+    public long getAge(){
+        return age;
+    }
+    public long getUniqueID() {
+        return uniqueID;
+    }
+    public void display(){
+        System.out.print("Citizen Name: " + getName() + ", ");
+        System.out.print("Age: " + getAge() + ", ");
         System.out.println("Unique ID: " + getUniqueID() + ", ");
     }
 }
