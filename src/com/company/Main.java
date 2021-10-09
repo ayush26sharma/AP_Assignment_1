@@ -1,14 +1,13 @@
 package com.company;
-
-import javax.sound.midi.Soundbank;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     static ArrayList<vaccine> vaccineList = new ArrayList<>();
-
+    static ArrayList<hospital> hospitalList = new ArrayList<>();
+    static ArrayList<Long> hospitalUniqueID = new ArrayList<>();
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
+        Random rand = new Random();
         while(true) {
             System.out.println();
             System.out.println("CoWin Portal initialised...");
@@ -22,21 +21,45 @@ public class Main {
             System.out.println("7. Check Vaccination Status");
             System.out.println("8. Exit");
             System.out.print("Enter your command: ");
-            System.out.println();
             int command = sc.nextInt();
+            System.out.println();
+
             if (command == 1){
                 System.out.print("Vaccine Name: ");
                 String name = sc.next();
                 System.out.print("Number of Doses: ");
                 long doses = sc.nextLong();
-                System.out.print("Gap between Doses: ");
-                long doseGap = sc.nextLong();
-                vaccine vaxi = new vaccine(name, doses, doseGap);
-                vaxi.display();
-                vaccineList.add(vaxi);
+                if (doses>1) {
+                    System.out.print("Gap between Doses: ");
+                    long doseGap = sc.nextLong();
+                    vaccine vaxi = new vaccine(name, doses, doseGap);
+                    vaxi.display();
+                    vaccineList.add(vaxi);
+                }
+                else{
+                    vaccine vaxi = new vaccine(name, doses, 0);
+                    vaxi.display();
+                    vaccineList.add(vaxi);
+                }
             }
             else if (command == 2){
-
+                System.out.print("Hospital Name: ");
+                String name = sc.next();
+                System.out.print("Pincode: ");
+                long pincode = sc.nextLong();
+                long uniqueID = rand.nextLong(900000) + 100000;
+                while(true){
+                    if (hospitalUniqueID.contains(uniqueID)){
+                        uniqueID = rand.nextLong(900000) + 100000;
+                    }
+                    else{
+                        hospitalUniqueID.add(uniqueID);
+                        hospital hos = new hospital(name, pincode, uniqueID);
+                        hospitalList.add(hos);
+                        hos.display();
+                        break;
+                    }
+                }
             }
             else if (command == 3){
 
@@ -68,9 +91,9 @@ public class Main {
 }
 
 class vaccine{
-    String name;
-    long doses;
-    long doseGap;
+    private String name;
+    private long doses;
+    private long doseGap;
     public vaccine(String name, long doses, long doseGap){
         this.name = name;
         this.doses = doses;
@@ -85,15 +108,6 @@ class vaccine{
     public long getDoseGap() {
         return doseGap;
     }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public void setDoses(long doses) {
-        this.doses = doses;
-    }
-    public void setDoseGap(long doseGap) {
-        this.doseGap = doseGap;
-    }
     public void display(){
         System.out.print("Vaccine Name: " + getName() + ", ");
         System.out.print("Number of Doses: " + getDoses() + ", ");
@@ -101,3 +115,27 @@ class vaccine{
     }
 }
 
+class hospital{
+    private String name;
+    private long pincode;
+    private long uniqueID;
+    public hospital(String name, long pincode, long uniqueID){
+        this.name = name;
+        this.pincode = pincode;
+        this.uniqueID = uniqueID;
+    }
+    public String getName() {
+        return name;
+    }
+    public long getPincode() {
+        return pincode;
+    }
+    public long getUniqueID() {
+        return uniqueID;
+    }
+    public void display(){
+        System.out.print("Hospital Name: " + getName() + ", ");
+        System.out.print("Pincode: " + getPincode() + ", ");
+        System.out.println("Unique ID: " + getUniqueID() + ", ");
+    }
+}
