@@ -13,5 +13,7 @@ public class Main {
         System.out.println("6. List all slots for a hospital");
         System.out.println("7. Check Vaccination Status");
         System.out.println("8. Exit");
+        System.out.println("Testing");
+        System.out.println("hee");
     }
 }
