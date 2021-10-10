@@ -200,6 +200,7 @@ public class Main {
                                     System.out.println(searchPatient(patientID).getName() + " vaccinated with " + availableSlots.get(m).vax.getName());
                                     person.setVaxStatus(availableSlots.get(m).vax);
                                     person.status.dosesGiven++;
+                                    person.status.updateStatus();
                                     availableSlots.get(m).quantity--;
                                     if (availableSlots.get(m).quantity == 0) {
                                         hospital hos = searchHospital(hosID);
@@ -234,7 +235,7 @@ public class Main {
                                                 System.out.println();
                                                 availableSlots.add(s);
                                                 x++;
-                                            } else {
+                                            } else if (s.dayNumber != person.status.vax.getDoseGap() + 1 && s.quantity > 0) {
                                                 flag = 1;
                                                 System.out.println("No slots available.");
                                             }
@@ -273,7 +274,6 @@ public class Main {
                                 for (slot s : hos.slots) {
                                     if (s.vax.getName().equals(vaxName)) {
                                         System.out.println(hos.getUniqueID() + " " + hos.getName());
-                                        System.out.println("Hello");
                                         availableHos.add(hos);
                                     }
                                 }
@@ -310,6 +310,7 @@ public class Main {
                                     System.out.println(searchPatient(patientID).getName() + " vaccinated with " + availableSlots.get(m).vax.getName());
                                     person.setVaxStatus(availableSlots.get(m).vax);
                                     person.status.dosesGiven++;
+                                    person.status.updateStatus();
                                     availableSlots.get(m).quantity--;
                                     if (availableSlots.get(m).quantity == 0) {
                                         hospital hos = searchHospital(hosID);
@@ -347,7 +348,7 @@ public class Main {
                                                 availableSlots.add(s);
                                                 x++;
                                             }
-                                            else if (s.quantity == 0 && s.vax.getName().equals(vaxName)){
+                                            else if ((s.dayNumber == person.status.vax.getDoseGap()+1 && s.quantity == 0 && s.vax.getName().equals(vaxName))|| (s.dayNumber != person.status.vax.getDoseGap()+1 && s.vax.getName().equals(vaxName))){
                                                 flag = 1;
                                                 System.out.println("No slots available.");
                                             }
