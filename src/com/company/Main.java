@@ -100,14 +100,16 @@ public class Main {
                         System.out.println("Citizen with Unique ID " + uniqueID + " already exists.");
                     }
                     else {
-                        if (uniqueID/ 100000000000L < 1) {
+                        if (String.valueOf(uniqueID).length() != 12) {
                             System.out.println("Invalid Unique ID");
                         }
                         else {
-                            citizen person = new citizen(name, age, uniqueID);
-                            citizensList.add(person);
-                            person.display();
-                            System.out.println("Registered");
+                            if (!citizenUniqueID.contains(uniqueID)) {
+                                citizen person = new citizen(name, age, uniqueID);
+                                citizensList.add(person);
+                                citizenUniqueID.add(uniqueID);
+                                person.display();
+                            }
                         }
                     }
                 }
