@@ -153,13 +153,15 @@ public class Main {
                     System.out.println("1. Search by area");
                     System.out.println("2. Search by Vaccine");
                     System.out.println("3. Exit");
+                    System.out.print("Enter Option: ");
                     int comm = sc.nextInt();
 
                     if (comm == 1) {
                         if (person.status == null){
+                            int flag = 0;
                             ArrayList<hospital> availableHos = new ArrayList<>();
                             ArrayList<slot> availableSlots = new ArrayList<>();
-                            System.out.println("Enter Pincode: ");
+                            System.out.print("Enter Pincode: ");
                             long pincode = sc.nextLong();
                             for (hospital hos : hospitalList) {
                                 if (hos.getPincode() == pincode) {
@@ -177,35 +179,41 @@ public class Main {
                                             if (s.quantity > 0) {
                                                 System.out.print(x + "-> ");
                                                 s.printDetails();
+                                                System.out.println();
                                                 availableSlots.add(s);
                                                 x++;
                                             } else {
+                                                flag = 1;
                                                 System.out.println("No slots available.");
                                             }
                                         }
                                     } else {
+                                        flag = 1;
                                         System.out.println("No slots available.");
                                     }
                                 }
                             }
-                            System.out.print("Choose Slot: ");
-                            int m = sc.nextInt();
-                            if (m < availableSlots.size()) {
-                                System.out.println(searchPatient(patientID).getName() + " vaccinated with " + availableSlots.get(m).vax.getName());
-                                person.status.giveDose(person.status.dosesGiven);
-                                person.status.updateStatus();
-                                availableSlots.get(m).quantity--;
-                                if (availableSlots.get(m).quantity==0){
-                                    hospital hos = searchHospital(hosID);
-                                    hos.slots.remove(availableSlots.get(m));
-                                    availableSlots.remove(m);
+                            if (flag == 0) {
+                                System.out.print("Choose Slot: ");
+                                int m = sc.nextInt();
+                                if (m < availableSlots.size()) {
+                                    System.out.println(searchPatient(patientID).getName() + " vaccinated with " + availableSlots.get(m).vax.getName());
+                                    person.setVaxStatus(availableSlots.get(m).vax);
+                                    person.status.dosesGiven++;
+                                    availableSlots.get(m).quantity--;
+                                    if (availableSlots.get(m).quantity == 0) {
+                                        hospital hos = searchHospital(hosID);
+                                        hos.slots.remove(availableSlots.get(m));
+                                        availableSlots.remove(m);
+                                    }
                                 }
                             }
                         }
-                        else if (person.status.vStatus.equals("PARTIALLY VACCINATED")){
+                        else if (person.status.vStatus.equals("PARTIALLY VACCINATED")) {
+                            int flag = 0;
                             ArrayList<hospital> availableHos = new ArrayList<>();
                             ArrayList<slot> availableSlots = new ArrayList<>();
-                            System.out.println("Enter Pincode: ");
+                            System.out.print("Enter Pincode: ");
                             long pincode = sc.nextLong();
                             for (hospital hos : hospitalList) {
                                 if (hos.getPincode() == pincode) {
@@ -220,91 +228,102 @@ public class Main {
                                 if (hos.getUniqueID() == hosID) {
                                     if (!hos.slots.isEmpty()) {                                     // partially vaccinated walo ka rehta hai
                                         for (slot s : hos.slots) {
-                                            if (s.dayNumber == person.status.vax.getDoseGap() && s.quantity > 0) {
+                                            if (s.dayNumber == person.status.vax.getDoseGap() + 1 && s.quantity > 0) {
                                                 System.out.print(x + "-> ");
                                                 s.printDetails();
+                                                System.out.println();
                                                 availableSlots.add(s);
                                                 x++;
                                             } else {
+                                                flag = 1;
                                                 System.out.println("No slots available.");
                                             }
                                         }
                                     } else {
+                                        flag = 1;
                                         System.out.println("No slots available.");
                                     }
                                 }
                             }
-                            System.out.print("Choose Slot: ");
-                            int m = sc.nextInt();
-                            if (m < availableSlots.size()) {
-                                System.out.println(searchPatient(patientID).getName() + " vaccinated with " + availableSlots.get(m).vax.getName());
-                                person.status.giveDose(person.status.dosesGiven);
-                                person.status.updateStatus();
-                                availableSlots.get(m).quantity--;
-                                if (availableSlots.get(m).quantity==0){
-                                    hospital hos = searchHospital(hosID);
-                                    hos.slots.remove(availableSlots.get(m));
-                                    availableSlots.remove(m);
+                            if (flag == 0) {
+                                System.out.print("Choose Slot: ");
+                                int m = sc.nextInt();
+                                if (m < availableSlots.size()) {
+                                    System.out.println(searchPatient(patientID).getName() + " vaccinated with " + availableSlots.get(m).vax.getName());
+                                    person.status.dosesGiven++;
+                                    person.status.updateStatus();
+                                    availableSlots.get(m).quantity--;
+                                    if (availableSlots.get(m).quantity == 0) {
+                                        hospital hos = searchHospital(hosID);
+                                        hos.slots.remove(availableSlots.get(m));
+                                        availableSlots.remove(m);
+                                    }
                                 }
                             }
-                        }
-                        else if (person.status.vStatus.equals("FULLY VACCINATED")){
-                            System.out.println("Patient is already fully vaccinated.");
                         }
                     }
                     else if (comm == 2) {
                         if (person.status == null) {
+                            int flag = 0;
                             ArrayList<hospital> availableHos = new ArrayList<>();
                             ArrayList<slot> availableSlots = new ArrayList<>();
-                            System.out.println("Enter Vaccine name: ");
+                            System.out.print("Enter Vaccine name: ");
                             String vaxName = sc.next();
                             for (hospital hos : hospitalList) {
                                 for (slot s : hos.slots) {
                                     if (s.vax.getName().equals(vaxName)) {
                                         System.out.println(hos.getUniqueID() + " " + hos.getName());
+                                        System.out.println("Hello");
                                         availableHos.add(hos);
                                     }
                                 }
                             }
-                            System.out.println("Enter Hospital ID: ");
+                            System.out.print("Enter Hospital ID: ");
                             long hosID = sc.nextLong();
                             int x = 0;
                             for (hospital hos : availableHos) {
                                 if (hos.getUniqueID() == hosID) {
                                     if (!hos.slots.isEmpty()) {                                     // partially vaccinated walo ka rehta hai
                                         for (slot s : hos.slots) {
-                                            if (s.quantity > 0) {
+                                            if (s.quantity > 0 && s.vax.getName().equals(vaxName)) {
                                                 System.out.print(x + "-> ");
                                                 s.printDetails();
+                                                System.out.println();
                                                 availableSlots.add(s);
                                                 x++;
-                                            } else {
+                                            } else if (s.quantity == 0 && s.vax.getName().equals(vaxName)) {
+                                                flag = 1;
                                                 System.out.println("No slots available.");
                                             }
                                         }
-                                    } else {
+                                    }
+                                    else {
+                                        flag = 1;
                                         System.out.println("No slots available.");
                                     }
                                 }
                             }
-                            System.out.print("Choose Slot: ");
-                            int m = sc.nextInt();
-                            if (m < availableSlots.size()) {
-                                System.out.println(searchPatient(patientID).getName() + " vaccinated with " + availableSlots.get(m).vax.getName());
-                                person.status.giveDose(person.status.dosesGiven);
-                                person.status.updateStatus();
-                                availableSlots.get(m).quantity--;
-                                if (availableSlots.get(m).quantity == 0) {
-                                    hospital hos = searchHospital(hosID);
-                                    hos.slots.remove(availableSlots.get(m));
-                                    availableSlots.remove(m);
+                            if (flag == 0) {
+                                System.out.print("Choose Slot: ");
+                                int m = sc.nextInt();
+                                if (m < availableSlots.size()) {
+                                    System.out.println(searchPatient(patientID).getName() + " vaccinated with " + availableSlots.get(m).vax.getName());
+                                    person.setVaxStatus(availableSlots.get(m).vax);
+                                    person.status.dosesGiven++;
+                                    availableSlots.get(m).quantity--;
+                                    if (availableSlots.get(m).quantity == 0) {
+                                        hospital hos = searchHospital(hosID);
+                                        hos.slots.remove(availableSlots.get(m));
+                                        availableSlots.remove(m);
+                                    }
                                 }
                             }
                         }
                         else if (person.status.vStatus.equals("PARTIALLY VACCINATED")){
+                            int flag = 0;
                             ArrayList<hospital> availableHos = new ArrayList<>();
                             ArrayList<slot> availableSlots = new ArrayList<>();
-                            System.out.println("Enter Vaccine name: ");
+                            System.out.print("Enter Vaccine name: ");
                             String vaxName = sc.next();
                             for (hospital hos : hospitalList) {
                                 for (slot s : hos.slots) {
@@ -314,38 +333,45 @@ public class Main {
                                     }
                                 }
                             }
-                            System.out.println("Enter Hospital ID: ");
+                            System.out.print("Enter Hospital ID: ");
                             long hosID = sc.nextLong();
                             int x = 0;
                             for (hospital hos : availableHos) {
                                 if (hos.getUniqueID() == hosID) {
                                     if (!hos.slots.isEmpty()) {                                     // partially vaccinated walo ka rehta hai
                                         for (slot s : hos.slots) {
-                                            if (s.dayNumber == person.status.vax.getDoseGap() && s.quantity>0) {
+                                            if (s.dayNumber == person.status.vax.getDoseGap()+1 && s.quantity>0 && s.vax.getName().equals(vaxName)) {
                                                 System.out.print(x + "-> ");
                                                 s.printDetails();
+                                                System.out.println();
                                                 availableSlots.add(s);
                                                 x++;
-                                            } else {
+                                            }
+                                            else if (s.quantity == 0 && s.vax.getName().equals(vaxName)){
+                                                flag = 1;
                                                 System.out.println("No slots available.");
                                             }
                                         }
-                                    } else {
+                                    }
+                                    else{
+                                        flag = 1;
                                         System.out.println("No slots available.");
                                     }
                                 }
                             }
-                            System.out.print("Choose Slot: ");
-                            int m = sc.nextInt();
-                            if (m < availableSlots.size()) {
-                                System.out.println(searchPatient(patientID).getName() + " vaccinated with " + availableSlots.get(m).vax.getName());
-                                person.status.giveDose(person.status.dosesGiven);
-                                person.status.updateStatus();
-                                availableSlots.get(m).quantity--;
-                                if (availableSlots.get(m).quantity == 0) {
-                                    hospital hos = searchHospital(hosID);
-                                    hos.slots.remove(availableSlots.get(m));
-                                    availableSlots.remove(m);
+                            if (flag == 0) {
+                                System.out.print("Choose Slot: ");
+                                int m = sc.nextInt();
+                                if (m < availableSlots.size()) {
+                                    System.out.println(searchPatient(patientID).getName() + " vaccinated with " + availableSlots.get(m).vax.getName());
+                                    person.status.dosesGiven++;
+                                    person.status.updateStatus();
+                                    availableSlots.get(m).quantity--;
+                                    if (availableSlots.get(m).quantity == 0) {
+                                        hospital hos = searchHospital(hosID);
+                                        hos.slots.remove(availableSlots.get(m));
+                                        availableSlots.remove(m);
+                                    }
                                 }
                             }
                         }
@@ -368,6 +394,7 @@ public class Main {
                     hospital hospi = searchHospital(hosID);
                     for (slot s : hospi.slots) {
                         s.printDetails();
+                        System.out.println();
                     }
                 }
             }
@@ -454,12 +481,18 @@ class citizen{
         long dosesGiven = 0;
         public vaccineStatus(vaccine vax){
             this.vax = vax;
+            if (dosesGiven==vax.getDoses()){
+                this.vStatus = "FULLY VACCINATED";
+            }
+            else{
+                this.vStatus = "PARTIALLY VACCINATED";
+            }
         }
         public void giveDose(long dosesGiven) {
             dosesGiven++;
         }
         public void updateStatus(){
-            if (dosesGiven==vax.getDoses()){
+            if (status.dosesGiven == vax.getDoses()){
                 vStatus = "FULLY VACCINATED";
             }
             else{
@@ -500,7 +533,8 @@ class citizen{
             System.out.println("Vaccine Given: " + status.vax.getName());
             System.out.println("No. of doses given: " + status.dosesGiven);
             if (status.vStatus.equals("PARTIALLY VACCINATED")) {
-                System.out.println("Next Dose due date: " + status.vax.getDoseGap());
+                long x = status.vax.getDoseGap() + 1;
+                System.out.println("Next Dose due date: " + x);
             }
 
         }
@@ -533,12 +567,12 @@ class slot{
 
     public void display(){
         System.out.print("Slot added by Hospital: " + hospitalID + " for Day: " + dayNumber + ", ");
-        System.out.print("Available Quantity: " + quantity + ", of ");
+        System.out.print("Available Quantity: " + quantity + " of ");
         System.out.println("Vaccine " + vax.getName());
     }
     public void printDetails(){
         System.out.print("Day: " + dayNumber + ", ");
-        System.out.print(" Available Qty: " + quantity + ", ");
-        System.out.print("Vaccine: " + vax.getName());
+        System.out.print("Vaccine: " + vax.getName() + ", ");
+        System.out.print("Available Qty: " + quantity );
     }
 }
